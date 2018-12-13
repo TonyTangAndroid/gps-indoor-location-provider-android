@@ -2,12 +2,11 @@ package io.indoorlocation.gps.demoapp;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
 
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -15,9 +14,9 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 
 import io.indoorlocation.gps.GPSIndoorLocationProvider;
-
-import io.mapwize.mapwizeformapbox.MapOptions;
-import io.mapwize.mapwizeformapbox.MapwizePlugin;
+import io.mapwize.mapwizeformapbox.map.MapOptions;
+import io.mapwize.mapwizeformapbox.map.MapwizePlugin;
+import io.mapwize.mapwizeformapbox.map.MapwizePluginFactory;
 
 
 public class MapActivity extends AppCompatActivity {
@@ -40,7 +39,7 @@ public class MapActivity extends AppCompatActivity {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
-                mapwizePlugin = new MapwizePlugin(mapView, mapboxMap, new MapOptions());
+                mapwizePlugin = MapwizePluginFactory.create(mapView, new MapOptions.Builder().build());
                 startLocationService();
             }
         });
@@ -50,8 +49,7 @@ public class MapActivity extends AppCompatActivity {
     private void startLocationService() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_ACCESS_FINE_LOCATION);
-        }
-        else {
+        } else {
             setupLocationProvider();
         }
     }
